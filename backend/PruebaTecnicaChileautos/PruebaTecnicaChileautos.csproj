@@ -15,4 +15,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PruebaTecnicaChileautos.Core\PruebaTecnicaChileautos.Core.csproj" />
+    <ProjectReference Include="..\PruebaTecnicaChileautos.Infrastructure\PruebaTecnicaChileautos.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

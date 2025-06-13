@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace PruebaTecnicaChileautos.Core.Interfaces
 {
-    public interface IEpisodeService
-    {   
+    public interface IRickAndMortyApiClient
+    {
+        Task<ApiResponse<EpisodeDto>> GetEpisodesAsync(int page);
     }
 }

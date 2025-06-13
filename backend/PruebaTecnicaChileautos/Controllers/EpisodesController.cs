@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PruebaTecnicaChileautos.Core.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +9,17 @@ namespace PruebaTecnicaChileautos.Controllers
     [ApiController]
     public class EpisodesController : ControllerBase
     {
-        // GET: api/<EpisodesController>
+
+        private readonly IRickAndMortyApiClient _episodeService;
+
+        public EpisodesController(IRickAndMortyApiClient episodeService) {
+            _episodeService = episodeService;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<EpisodesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<EpisodesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<EpisodesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<EpisodesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+        public async Task<IActionResult> GetEpisodes([FromQuery] int page = 1) {
+            var result = await _episodeService.GetEpisodesAsync(page);
+            return Ok(result);
         }
     }
 }
