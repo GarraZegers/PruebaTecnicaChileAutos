@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using PruebaTecnicaChileautos.Core.Interfaces;
 using PruebaTecnicaChileautos.Infrastructure.Configurations;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace PruebaTecnicaChileautos.Infrastructure.Clients
 {
@@ -25,24 +26,43 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
             _logger = logger;
             _settings= settings.Value;
         }
-
+        /// <summary>
+        /// Metodo que ontiene episodios de la serie de Rick And Morty, recibiendo el numero de 
+        /// pagina como parámetro de entrada.
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public async Task<ApiResponse<EpisodeDto>> GetEpisodesAsync(int page)
-        {
-            ApiResponse<EpisodeDto> response = null;
+        {   
             try
             {
-                string query = string.Format("{0}/episode?page={1}", _settings.BaseUrl, page);
-                
-                response = await _httpClient.GetFromJsonAsync<ApiResponse<EpisodeDto>>(query);
+                string query = $"{_settings.BaseUrl}/episode?page={page}";
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<EpisodeDto>>(query);
+
+                return response ?? new ApiResponse<EpisodeDto>
+                {
+                    Info = new PageInfo(),
+                    Results = []
+                };
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener episodios para la página {Page}.", page);
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de episodios para la página {Page}.", page);
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Error inesperado al obtener episodios para la página {Page}.", page);
             }
-            // Mapear a DTO, manejar errores, devolver paginación
 
-            return response;
+            return new ApiResponse<EpisodeDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
         }
     }
 }
