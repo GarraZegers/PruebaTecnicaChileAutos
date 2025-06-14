@@ -10,6 +10,9 @@ namespace PruebaTecnicaChileautos.Core.Interfaces
 {
     public interface IRickAndMortyApiClient
     {
-        Task<ApiResponse<EpisodeDto>> GetEpisodesAsync(int page);
+        Task<ApiResponse<EpisodeDto>> GetAllEpisodesAsync();
+        Task<ApiResponse<EpisodeDto>> GetSingleEpisodeAsync(int episode);
+        Task<ApiResponse<EpisodeDto>> GetMultipleEpisodesAsync(List<string> episodes);
+        Task<ApiResponse<EpisodeDto>> GetFilteredEpisodes(EpisodeFilter filters);
     }
 }
