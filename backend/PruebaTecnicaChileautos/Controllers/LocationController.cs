@@ -106,11 +106,11 @@ namespace PruebaTecnicaChileautos.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllEpisodes()
+        public async Task<IActionResult> GetAllEpisodes(int page = 1)
         {
             try
             {
-                var result = await _apiService.GetAllLocationsAsync();
+                var result = await _apiService.GetAllLocationsAsync(page);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {

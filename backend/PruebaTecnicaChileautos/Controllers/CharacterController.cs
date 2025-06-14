@@ -107,11 +107,11 @@ namespace PruebaTecnicaChileautos.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllCharacters()
+        public async Task<IActionResult> GetAllCharacters(int page = 1)
         {
             try
             {
-                var result = await _apiService.GetAllCharactersAsync();
+                var result = await _apiService.GetAllCharactersAsync(page);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {

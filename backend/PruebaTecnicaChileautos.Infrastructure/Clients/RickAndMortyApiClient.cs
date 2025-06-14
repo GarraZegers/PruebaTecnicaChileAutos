@@ -34,11 +34,11 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
         /// Entrega todos los personajes de la serie Rick and Morty
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<CharacterDto>> GetAllCharactersAsync()
+        public async Task<ApiResponse<CharacterDto>> GetAllCharactersAsync(int page = 1)
         {
             try
             {
-                string query = $"{_settings.BaseUrl}/character";
+                string query = $"{_settings.BaseUrl}/character?page={page}";
                 var response = await _httpClient.GetFromJsonAsync<ApiResponse<CharacterDto>>(query);
 
                 return response ?? new ApiResponse<CharacterDto>
@@ -221,11 +221,11 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
         /// Obtiene todos los lugares de y sus descripciones completas
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<LocationDto>> GetAllLocationsAsync()
+        public async Task<ApiResponse<LocationDto>> GetAllLocationsAsync(int page = 1)
         {
             try
             {
-                string query = $"{_settings.BaseUrl}/location";
+                string query = $"{_settings.BaseUrl}/location?page={page}";
                 var response = await _httpClient.GetFromJsonAsync<ApiResponse<LocationDto>>(query);
 
                 return response ?? new ApiResponse<LocationDto>
@@ -407,11 +407,11 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
         /// Metodo que obtiene todos los episodios de la serie de Rick And Morty, 
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiResponse<EpisodeDto>> GetAllEpisodesAsync()
+        public async Task<ApiResponse<EpisodeDto>> GetAllEpisodesAsync(int page = 1)
         {
             try
             {
-                string query = $"{_settings.BaseUrl}/episode";
+                string query = $"{_settings.BaseUrl}/episode?page={page}";
                 var response = await _httpClient.GetFromJsonAsync<ApiResponse<EpisodeDto>>(query);
 
                 return response ?? new ApiResponse<EpisodeDto>

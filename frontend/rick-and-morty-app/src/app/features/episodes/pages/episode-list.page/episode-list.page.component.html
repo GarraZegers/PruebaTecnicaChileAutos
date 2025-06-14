@@ -1,0 +1,9 @@
+<h1>Episodios</h1>
+<ul *ngIf="episodes.length > 0; else loading">
+  <li *ngFor="let episode of episodes">
+    <strong>{{ episode.episode }}</strong> - {{ episode.name }}
+  </li>
+</ul>
+<ng-template #loading>
+  <p>Cargando episodios...</p>
+</ng-template>

@@ -10,21 +10,21 @@ namespace PruebaTecnicaChileautos.Core.Interfaces
     public interface IRickAndMortyApiClient
     {
         #region CHARACTER
-        Task<ApiResponse<CharacterDto>> GetAllCharactersAsync();
+        Task<ApiResponse<CharacterDto>> GetAllCharactersAsync(int page = 1);
         Task<ApiResponse<CharacterDto>> GetSingleCharacterAsync(int characterId);
         Task<ApiResponse<CharacterDto>> GetMultipleCharactersAsync(List<string> characterIds);
         Task<ApiResponse<CharacterDto>> GetFilteredCharacters(CharacterFilter filters);
         #endregion       
 
         #region LOCATION
-        Task<ApiResponse<LocationDto>> GetAllLocationsAsync();
+        Task<ApiResponse<LocationDto>> GetAllLocationsAsync(int page = 1);
         Task<ApiResponse<LocationDto>> GetSingleLocationAsync(int locationId);
         Task<ApiResponse<LocationDto>> GetMultipleLocationsAsync(List<string> locationIds);
         Task<ApiResponse<LocationDto>> GetFilteredLocations(LocationFilter filters);
         #endregion
 
         #region EPISODES
-        Task<ApiResponse<EpisodeDto>> GetAllEpisodesAsync();
+        Task<ApiResponse<EpisodeDto>> GetAllEpisodesAsync(int page = 1);
         Task<ApiResponse<EpisodeDto>> GetSingleEpisodeAsync(int episode);
         Task<ApiResponse<EpisodeDto>> GetMultipleEpisodesAsync(List<string> episodes);
         Task<ApiResponse<EpisodeDto>> GetFilteredEpisodes(EpisodeFilter filters);
