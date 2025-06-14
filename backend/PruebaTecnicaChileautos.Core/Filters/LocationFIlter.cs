@@ -20,10 +20,10 @@ namespace PruebaTecnicaChileautos.Core.Filters
                 queryParams.Add($"name={Uri.EscapeDataString(Name)}");
 
             if (!string.IsNullOrWhiteSpace(Type))
-                queryParams.Add($"name={Uri.EscapeDataString(Type)}");
+                queryParams.Add($"type={Uri.EscapeDataString(Type)}");
 
             if (!string.IsNullOrWhiteSpace(Dimension))
-                queryParams.Add($"name={Uri.EscapeDataString(Dimension)}");
+                queryParams.Add($"dimension={Uri.EscapeDataString(Dimension)}");
 
             return string.Join("&", queryParams);
         }

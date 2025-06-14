@@ -1,16 +1,21 @@
-﻿using PruebaTecnicaChileautos.Core.Classes;
+﻿#region USING
+using PruebaTecnicaChileautos.Core.Classes;
 using PruebaTecnicaChileautos.Core.DTOs;
 using PruebaTecnicaChileautos.Core.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+#endregion
+
 
 namespace PruebaTecnicaChileautos.Core.Interfaces
 {
     public interface IRickAndMortyApiClient
     {
+        #region CHARACTER
+        Task<ApiResponse<CharacterDto>> GetAllCharactersAsync();
+        Task<ApiResponse<CharacterDto>> GetSingleCharacterAsync(int characterId);
+        Task<ApiResponse<CharacterDto>> GetMultipleCharactersAsync(List<string> characterIds);
+        Task<ApiResponse<CharacterDto>> GetFilteredCharacters(CharacterFilter filters);
+        #endregion       
+
         #region LOCATION
         Task<ApiResponse<LocationDto>> GetAllLocationsAsync();
         Task<ApiResponse<LocationDto>> GetSingleLocationAsync(int locationId);

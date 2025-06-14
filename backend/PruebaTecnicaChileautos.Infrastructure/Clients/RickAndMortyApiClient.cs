@@ -28,11 +28,199 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
             _settings= settings.Value;
         }
 
-        #region LOCATIONS
+        #region CHARACTERS
+
+        /// <summary>
+        /// Entrega todos los personajes de la serie Rick and Morty
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<CharacterDto>> GetAllCharactersAsync()
+        {
+            try
+            {
+                string query = $"{_settings.BaseUrl}/character";
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<CharacterDto>>(query);
+
+                return response ?? new ApiResponse<CharacterDto>
+                {
+                    Info = new PageInfo(),
+                    Results = []
+                };
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener todos el personaje");
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de la obtencion de todos los personajes");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener todos los personajes");
+            }
+
+            return new ApiResponse<CharacterDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+        /// <summary>
+        /// Obtiene un personaje de la serie Rick and Morty por su id
+        /// </summary>
+        /// <param name="characterId"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<CharacterDto>> GetSingleCharacterAsync(int characterId)
+        {
+            try
+            {
+                string query = $"{_settings.BaseUrl}/character/{characterId}";
+                var response = await _httpClient.GetFromJsonAsync<CharacterDto>(query);
+
+
+                if (response is null)
+                {
+                    return new ApiResponse<CharacterDto>
+                    {
+                        Info = new PageInfo(),
+                        Results = []
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<CharacterDto>
+                    {
+                        Info = new PageInfo { Count = 1, Next = null, Pages = 1, Prev = null },
+                        Results = [response]
+                    };
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener el personar {characterId}.", characterId);
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta del personaje {characterId}.", characterId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener el personaje {characterId}.", characterId);
+            }
+
+            return new ApiResponse<CharacterDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
        /// <summary>
-       /// Obtiene todos los lugares de y sus descripciones completas
+       /// Retorna una lista de personajes segun los ids de los personajes entregados
        /// </summary>
+       /// <param name="characterIds"></param>
        /// <returns></returns>
+        public async Task<ApiResponse<CharacterDto>> GetMultipleCharactersAsync(List<string> characterIds)
+        {
+            try
+            {
+                string query = $"{_settings.BaseUrl}/character/{string.Join(",", characterIds)}";
+
+                if (characterIds.Count == 1)
+                {
+                    var single = await _httpClient.GetFromJsonAsync<CharacterDto>(query);
+                    return new ApiResponse<CharacterDto>
+                    {
+                        Info = new PageInfo { Count = 1, Pages = 1, Next = null, Prev = null },
+                        Results = single is null ? [] : [single]
+                    };
+                }
+                else
+                {
+                    var list = await _httpClient.GetFromJsonAsync<List<CharacterDto>>(query);
+                    return new ApiResponse<CharacterDto>
+                    {
+                        Info = new PageInfo { Count = list?.Count ?? 0, Pages = 1, Next = null, Prev = null },
+                        Results = list ?? []
+                    };
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener personajes {charactersIds}.", string.Join(",", characterIds));
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de los personajes {characterIds}.", string.Join(",", characterIds));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener los personajes {characterIds}.", string.Join(",", characterIds));
+            }
+
+            return new ApiResponse<CharacterDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+        /// <summary>
+        /// Enterga una lista de personajes segun los filtros entregados
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <returns></returns>
+        public async Task<ApiResponse<CharacterDto>> GetFilteredCharacters(CharacterFilter filters)
+        {
+            try
+            {
+                string query = filters.ToQueryString();
+                string url = $"{_settings.BaseUrl}/character";
+
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    url += $"?{query}";
+                }
+
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<CharacterDto>>(url);
+
+                return response ?? new ApiResponse<CharacterDto>
+                {
+                    Info = new PageInfo(),
+                    Results = []
+                };
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener los personajes con los filtros {filters}.", filters);
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de los personajes para los filtros {filters}.", filters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener los personajes para los filtros {filters}.", filters);
+            }
+
+            return new ApiResponse<CharacterDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+        #endregion
+
+
+
+        #region LOCATIONS
+        /// <summary>
+        /// Obtiene todos los lugares de y sus descripciones completas
+        /// </summary>
+        /// <returns></returns>
         public async Task<ApiResponse<LocationDto>> GetAllLocationsAsync()
         {
             try
@@ -211,7 +399,6 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
         }
 
         #endregion
-
 
 
         #region EPISODES

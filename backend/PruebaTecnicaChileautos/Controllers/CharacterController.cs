@@ -7,12 +7,12 @@ namespace PruebaTecnicaChileautos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LocationController : ControllerBase
+    public class CharacterController : ControllerBase
     {
         private readonly IRickAndMortyApiClient _apiService;
-        private readonly ILogger<LocationController> _logger;
+        private readonly ILogger<CharacterController> _logger;
 
-        public LocationController(IRickAndMortyApiClient apiService, ILogger<LocationController> logger)
+        public CharacterController(IRickAndMortyApiClient apiService, ILogger<CharacterController> logger)
         {
             _apiService = apiService;
             _logger = logger;
@@ -20,11 +20,12 @@ namespace PruebaTecnicaChileautos.Controllers
         }
 
         [HttpGet("filtered")]
-        public async Task<IActionResult> GetFilteredLocations([FromQuery] LocationFilter query)
+        public async Task<IActionResult> GetFilteredCharacters([FromQuery] CharacterFilter query)
+
         {
             try
             {
-                var result = await _apiService.GetFilteredLocations(query);
+                var result = await _apiService.GetFilteredCharacters(query);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
@@ -41,24 +42,24 @@ namespace PruebaTecnicaChileautos.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener los lugares con el filtro query de valor {query}", query);
+                _logger.LogError(ex, "Error inesperado al obtener los personajes con el filtro query de valor {query}", query);
                 return StatusCode(500, "Error inesperado.");
             }
         }
 
         [HttpGet("multiple")]
-        public async Task<IActionResult> GetMultipleLocations([FromQuery] string locations)
+        public async Task<IActionResult> GetMultipleCharacters([FromQuery] string characters)
         {
             try
             {
-                var locationIds = locations.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                var characterIds = characters.Split(',', StringSplitOptions.RemoveEmptyEntries)
                     .Select(id => id.Trim())
                     .Where(id => int.TryParse(id, out _))
                     .ToList();
 
-                if (locationIds.Count == 0) return BadRequest("Numeros de lugares invalidos");
+                if (characterIds.Count == 0) return BadRequest("Numeros de personajes invalidos");
 
-                var result = await _apiService.GetMultipleLocationsAsync(locationIds);
+                var result = await _apiService.GetMultipleCharactersAsync(characterIds);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
@@ -69,59 +70,59 @@ namespace PruebaTecnicaChileautos.Controllers
             }
             catch (ArgumentException arg)
             {
-                _logger.LogWarning(arg, "Solicitud inválida para el parámetro id de lugares de valor {locations}", locations);
+                _logger.LogWarning(arg, "Solicitud inválida para el parámetro id de personajes de valor {characters}", characters);
                 return BadRequest("Parámetros inválidos.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener los lugares con el filtro di de lugares de valor {locations}", locations);
+                _logger.LogError(ex, "Error inesperado al obtener los lugares con el filtro de personajes de valor {characters}", characters);
                 return StatusCode(500, "Error inesperado.");
             }
         }
 
         [HttpGet("single")]
-        public async Task<IActionResult> GetSingleLocation([FromQuery] int locationId)
+        public async Task<IActionResult> GetSingleCharacter([FromQuery] int characterId)
         {
             try
             {
-                var result = await _apiService.GetSingleLocationAsync(locationId);
+                var result = await _apiService.GetSingleCharacterAsync(characterId);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
-                    return NotFound("No se encontraron resultados para el lugar solicitado.");
+                    return NotFound("No se encontraron resultados para el personaje solicitado.");
                 }
 
                 return Ok(result);
             }
             catch (ArgumentException arg)
             {
-                _logger.LogWarning(arg, "Solicitud inválida para el parámetro locationId de valor {locationId}", locationId);
+                _logger.LogWarning(arg, "Solicitud inválida para el parámetro characterId de valor {characterId}", characterId);
                 return BadRequest("Parámetros inválidos.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener el lugar de id {locationId}", locationId);
+                _logger.LogError(ex, "Error inesperado al obtener el personaje de id {characterId}", characterId);
                 return StatusCode(500, "Error inesperado.");
             }
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllEpisodes()
+        public async Task<IActionResult> GetAllCharacters()
         {
             try
             {
-                var result = await _apiService.GetAllLocationsAsync();
+                var result = await _apiService.GetAllCharactersAsync();
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
-                    return NotFound("No se encontraron lugares.");
+                    return NotFound("No se encontraron personajes.");
                 }
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener todos los lugares");
+                _logger.LogError(ex, "Error inesperado al obtener todos los personajes");
                 return StatusCode(500, "Error inesperado.");
             }
         }
