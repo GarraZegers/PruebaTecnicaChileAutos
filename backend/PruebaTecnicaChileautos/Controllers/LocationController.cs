@@ -1,34 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PruebaTecnicaChileautos.Core.Filters;
 using PruebaTecnicaChileautos.Core.Interfaces;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PruebaTecnicaChileautos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EpisodesController : ControllerBase
+    public class LocationController : ControllerBase
     {
+        private readonly IRickAndMortyApiClient _apiService;
+        private readonly ILogger<LocationController> _logger;
 
-        private readonly IRickAndMortyApiClient _episodeService;
-        private readonly ILogger<EpisodesController> _logger;
-
-        public EpisodesController(IRickAndMortyApiClient apiService, ILogger<EpisodesController> logger)
+        public LocationController(IRickAndMortyApiClient apiService, ILogger<LocationController> logger)
         {
-            _episodeService = apiService;
+            _apiService = apiService;
             _logger = logger;
-            
+
         }
 
         [HttpGet("filtered")]
-        public async Task<IActionResult> GetFilteredEpisodes([FromQuery] EpisodeFilter query) {
+        public async Task<IActionResult> GetFilteredLocations([FromQuery] LocationFilter query)
+        {
             try
             {
-                var result = await _episodeService.GetFilteredEpisodes(query);
+                var result = await _apiService.GetFilteredLocations(query);
 
-                if (result == null || result.Results == null || result.Results.Count == 0) {
-                
+                if (result == null || result.Results == null || result.Results.Count == 0)
+                {
+
                     return NotFound("No se encontraron resultados para la página solicitada.");
                 }
 
@@ -41,24 +41,24 @@ namespace PruebaTecnicaChileautos.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener episodios con el filtro query de valor {query}", query);
+                _logger.LogError(ex, "Error inesperado al obtener los lugares con el filtro query de valor {query}", query);
                 return StatusCode(500, "Error inesperado.");
             }
         }
 
         [HttpGet("multiple")]
-        public async Task<IActionResult> GetMultipleEpisodes([FromQuery] string episodes)
+        public async Task<IActionResult> GetMultipleLocations([FromQuery] string locations)
         {
             try
             {
-                var episodesIds = episodes.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                var locationIds = locations.Split(',', StringSplitOptions.RemoveEmptyEntries)
                     .Select(id => id.Trim())
                     .Where(id => int.TryParse(id, out _))
                     .ToList();
 
-                if (episodesIds.Count == 0) return BadRequest("Numeros de episodios invalidos");
+                if (locationIds.Count == 0) return BadRequest("Numeros de lugares invalidos");
 
-                var result = await _episodeService.GetMultipleEpisodesAsync(episodesIds);
+                var result = await _apiService.GetMultipleLocationsAsync(locationIds);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
@@ -69,38 +69,38 @@ namespace PruebaTecnicaChileautos.Controllers
             }
             catch (ArgumentException arg)
             {
-                _logger.LogWarning(arg, "Solicitud inválida para el parámetro episodes de valor {episodes}", episodes);
+                _logger.LogWarning(arg, "Solicitud inválida para el parámetro id de lugares de valor {locations}", locations);
                 return BadRequest("Parámetros inválidos.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener episodios con el filtro episodes de valor {episodes}", episodes);
+                _logger.LogError(ex, "Error inesperado al obtener los lugares con el filtro di de lugares de valor {locations}", locations);
                 return StatusCode(500, "Error inesperado.");
             }
         }
 
         [HttpGet("single")]
-        public async Task<IActionResult> GetSingleEpisodes([FromQuery] int episode)
+        public async Task<IActionResult> GetSingleLocation([FromQuery] int locationId)
         {
             try
             {
-                var result = await _episodeService.GetSingleEpisodeAsync(episode);
+                var result = await _apiService.GetSingleEpisodeAsync(locationId);
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
-                    return NotFound("No se encontraron resultados para el episodio solicitado.");
+                    return NotFound("No se encontraron resultados para el lugar solicitado.");
                 }
 
                 return Ok(result);
             }
             catch (ArgumentException arg)
             {
-                _logger.LogWarning(arg, "Solicitud inválida para el parámetro episode de valor {episode}", episode);
+                _logger.LogWarning(arg, "Solicitud inválida para el parámetro locationId de valor {locationId}", locationId);
                 return BadRequest("Parámetros inválidos.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener el episodio de valor {episode}", episode);
+                _logger.LogError(ex, "Error inesperado al obtener el lugar de id {locationId}", locationId);
                 return StatusCode(500, "Error inesperado.");
             }
         }
@@ -110,21 +110,20 @@ namespace PruebaTecnicaChileautos.Controllers
         {
             try
             {
-                var result = await _episodeService.GetAllEpisodesAsync();
+                var result = await _apiService.GetAllLocationsAsync();
 
                 if (result == null || result.Results == null || result.Results.Count == 0)
                 {
-                    return NotFound("No se encontraron episodios.");
+                    return NotFound("No se encontraron lugares.");
                 }
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado al obtener todos los episodios");
+                _logger.LogError(ex, "Error inesperado al obtener todos los lugares");
                 return StatusCode(500, "Error inesperado.");
             }
         }
-
     }
 }

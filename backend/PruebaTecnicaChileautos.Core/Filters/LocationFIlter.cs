@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PruebaTecnicaChileautos.Core.DTOs
+namespace PruebaTecnicaChileautos.Core.Filters
 {
-    public class EpisodeFilter
+    public class LocationFilter
     {
         public string? Name { get; set; }
-        public string? Episode { get; set; }
-
+        public string? Type { get; set; }
+        public string? Dimension { get; set; }
 
         public string ToQueryString()
         {
@@ -19,8 +19,11 @@ namespace PruebaTecnicaChileautos.Core.DTOs
             if (!string.IsNullOrWhiteSpace(Name))
                 queryParams.Add($"name={Uri.EscapeDataString(Name)}");
 
-            if (!string.IsNullOrWhiteSpace(Episode))
-                queryParams.Add($"name={Uri.EscapeDataString(Episode)}");
+            if (!string.IsNullOrWhiteSpace(Type))
+                queryParams.Add($"name={Uri.EscapeDataString(Type)}");
+
+            if (!string.IsNullOrWhiteSpace(Dimension))
+                queryParams.Add($"name={Uri.EscapeDataString(Dimension)}");
 
             return string.Join("&", queryParams);
         }

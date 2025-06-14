@@ -11,6 +11,7 @@ using PruebaTecnicaChileautos.Core.Interfaces;
 using PruebaTecnicaChileautos.Infrastructure.Configurations;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
+using PruebaTecnicaChileautos.Core.Filters;
 
 namespace PruebaTecnicaChileautos.Infrastructure.Clients
 {
@@ -26,6 +27,192 @@ namespace PruebaTecnicaChileautos.Infrastructure.Clients
             _logger = logger;
             _settings= settings.Value;
         }
+
+        #region LOCATIONS
+       /// <summary>
+       /// Obtiene todos los lugares de y sus descripciones completas
+       /// </summary>
+       /// <returns></returns>
+        public async Task<ApiResponse<LocationDto>> GetAllLocationsAsync()
+        {
+            try
+            {
+                string query = $"{_settings.BaseUrl}/location";
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<LocationDto>>(query);
+
+                return response ?? new ApiResponse<LocationDto>
+                {
+                    Info = new PageInfo(),
+                    Results = []
+                };
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener todos los lugares");
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de la obtencion de todos los lugares");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener todos los lugares");
+            }
+
+            return new ApiResponse<LocationDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+        /// <summary>
+        /// Obtiene un lugar en particular a partir de su id y sus descripciones completas
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ApiResponse<LocationDto>> GetSingleLocationAsync(int locationId)
+        {
+            try
+            {
+                string query = $"{_settings.BaseUrl}/location/{locationId}";
+                var response = await _httpClient.GetFromJsonAsync<LocationDto>(query);
+
+
+                if (response is null)
+                {
+                    return new ApiResponse<LocationDto>
+                    {
+                        Info = new PageInfo(),
+                        Results = []
+                    };
+                }
+                else
+                {
+                    return new ApiResponse<LocationDto>
+                    {
+                        Info = new PageInfo { Count = 1, Next = null, Pages = 1, Prev = null },
+                        Results = [response]
+                    };
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener el lugar {locationId}.", locationId);
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta del lugar {locationId}.", locationId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener el lugar {locationId}.", locationId);
+            }
+
+            return new ApiResponse<LocationDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+       /// <summary>
+       /// Obtiene multiples lugares segun los ids entregados
+       /// </summary>
+       /// <param name="locationIds"></param>
+       /// <returns></returns>
+        public async Task<ApiResponse<LocationDto>> GetMultipleLocationsAsync(List<string> locationIds)
+        {
+            try
+            {
+                string query = $"{_settings.BaseUrl}/episode/{string.Join(",", locationIds)}";
+
+                if (locationIds.Count == 1)
+                {
+                    var single = await _httpClient.GetFromJsonAsync<LocationDto>(query);
+                    return new ApiResponse<LocationDto>
+                    {
+                        Info = new PageInfo { Count = 1, Pages = 1, Next = null, Prev = null },
+                        Results = single is null ? [] : [single]
+                    };
+                }
+                else
+                {
+                    var list = await _httpClient.GetFromJsonAsync<List<LocationDto>>(query);
+                    return new ApiResponse<LocationDto>
+                    {
+                        Info = new PageInfo { Count = list?.Count ?? 0, Pages = 1, Next = null, Prev = null },
+                        Results = list ?? []
+                    };
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener lugares {locationIds}.", string.Join(",", locationIds));
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de los lugares {locationIds}.", string.Join(",", locationIds));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener los lugares {locationIds}.", string.Join(",", locationIds));
+            }
+
+            return new ApiResponse<LocationDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+       /// <summary>
+       /// Entrega una lista de lugares segun los filtros entregados; name, type, dimension.
+       /// </summary>
+       /// <param name="filters"></param>
+       /// <returns></returns>
+        public async Task<ApiResponse<LocationDto>> GetFilteredLocations(LocationFilter filters)
+        {
+            try
+            {
+                string query = filters.ToQueryString();
+                string url = $"{_settings.BaseUrl}/location";
+
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    url += $"?{query}";
+                }
+
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<LocationDto>>(url);
+
+                return response ?? new ApiResponse<LocationDto>
+                {
+                    Info = new PageInfo(),
+                    Results = []
+                };
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "Error de la red al obtener los lugares con los filtros {filters}.", filters);
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, "Error al deserializar la respuesta de los lugares para los filtros {filters}.", filters);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener los lugares para los filtros {filters}.", filters);
+            }
+
+            return new ApiResponse<LocationDto>
+            {
+                Info = new PageInfo(),
+                Results = []
+            };
+        }
+
+        #endregion
+
+
 
         #region EPISODES
 
