@@ -42,14 +42,15 @@ docker compose up --build
 ```
 
 
-Esto dejará el backend disponible en:
+##Esto dejará el backend disponible en:
 
 http://localhost:8080
-La documentación Swagger estará en:
 
+##La documentación Swagger estará en:
 
 http://localhost:8080/swagger
-En caso de no usar Docker, puedes abrir el backend con Visual Studio y ejecutarlo directamente.
+
+**En caso de no usar Docker, puedes abrir el backend con Visual Studio y ejecutarlo directamente.
 
 ## Frontend
 Para levantar el frontend:
