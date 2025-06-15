@@ -15,7 +15,9 @@
 <h1>Episodios</h1>
 <ul *ngIf="episodes.length > 0; else loading">
   <li *ngFor="let episode of episodes">
-    <strong>{{ episode.episode }}</strong> - {{ episode.name }}
+    <strong>{{ episode.episode }}</strong> - {{ episode.name }} <a [routerLink]="[episode.id]">
+  Ver detalle
+</a>
   </li>
 </ul>
 

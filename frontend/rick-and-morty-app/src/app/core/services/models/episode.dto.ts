@@ -1,7 +1,7 @@
 export interface EpisodeDto {
     id: number;
     name: string;
-    airDate: string;
+    air_date: string;
     episode: string;
     characters: string[];
     url: string;

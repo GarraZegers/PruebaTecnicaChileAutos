@@ -1,0 +1,24 @@
+<div *ngIf="episode; else loading">
+  <h2>{{ episode.name }}</h2>
+  <p><strong>Fecha:</strong> {{ episode.air_date }}</p>
+  <p><strong>Código:</strong> {{ episode.episode }}</p>
+  <p><strong>Creado:</strong> {{ episode.created }}</p>
+
+  <h3>Personajes</h3>
+  <ul>
+    <li *ngFor="let character of episode.characters">
+      {{ character }}
+      <button (click)="showCharacterImage(character)">
+      Ver imagen del personaje
+    </button>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="selectedCharacterImage" class="character-image-container">
+  <img [src]="selectedCharacterImage" alt="Character" width="300" height="300" />
+</div>
+
+<ng-template #loading>
+  <p>Cargando episodio...</p>
+</ng-template>

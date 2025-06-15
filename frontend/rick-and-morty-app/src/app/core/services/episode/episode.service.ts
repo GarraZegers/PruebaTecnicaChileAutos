@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
-import { ApiResponse } from './models/api-response.model';
-import { EpisodeDto } from './models/episode.dto';
-import { EpisodeFilter } from './models/episode-filter';
+import { ApiResponse } from '../models/api-response.model';
+import { EpisodeDto } from '../models/episode.dto';
+import { EpisodeFilter } from '../models/episode-filter';
 
 @Injectable({
   providedIn: 'root',
@@ -33,5 +33,11 @@ export class EpisodeService {
       `${this.apiUrl}/Episodes/filtered`,
       { params }
     );
+  }
+
+  getEpisodeById(episodeId : number) : Observable<ApiResponse<EpisodeDto>>{
+    return this,this.http.get<ApiResponse<EpisodeDto>>(
+      `${this.apiUrl}/Episodes/single?episode=${episodeId}`
+    )
   }
 }
