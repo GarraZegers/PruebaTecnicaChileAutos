@@ -24,13 +24,10 @@ export class EpisodeService {
     }
 
     let params = new HttpParams();
-    const query = filters.toQueryParams();
+    const query = filters.toQueryString();
 
-    for (const key in query) {
-      params = params.set(key, query[key]);
-    }
     return this.http.get<ApiResponse<EpisodeDto>>(
-      `${this.apiUrl}/Episodes/filtered`,
+      `${this.apiUrl}/Episodes/filtered${query ? '?' + query : ''}`,
       { params }
     );
   }

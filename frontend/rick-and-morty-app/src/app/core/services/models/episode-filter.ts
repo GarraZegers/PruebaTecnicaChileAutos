@@ -5,18 +5,13 @@ export class EpisodeFilter {
         public episode: string = ''
     ){}
 
-    toQueryParams(): {[key:string]: string}{
-        const params: {[key:string]: string} = {};
+    toQueryString(): string {
+        const params: string [] = [];
 
-        if(this.name.trim()){
-            params['name'] = this.name.trim();
-        }
+        if(!!this.name.trim()) params.push(`name=${encodeURIComponent(this.name)}`)
+        if(!!this.episode.trim()) params.push(`episode=${encodeURIComponent(this.episode)}`)
 
-        if(this.episode.trim()){
-            params['episode'] = this.episode.trim();
-        }
-
-        return params;
+        return params.join('&');
     }
 
     hasFilters() : boolean {

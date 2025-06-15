@@ -1,4 +1,4 @@
-import { LocationInfo } from "./location.dto";
+import { LocationInfo } from "./location.info.dto";
 
 export interface CharacterDto {
   id: number;
