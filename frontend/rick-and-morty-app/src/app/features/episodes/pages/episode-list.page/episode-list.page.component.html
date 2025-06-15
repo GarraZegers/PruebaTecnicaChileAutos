@@ -1,36 +1,52 @@
-<div class="filters">
-  <input
-    type="text"
-    placeholder="Nombre del episodio"
-    [(ngModel)]="filters.name"
-  />
-  <input
-    type="text"
-    placeholder="Código (ej: S01E01)"
-    [(ngModel)]="filters.episode"
-  />
-  <button (click)="applyFilters()">Buscar</button>
+<div class="episode-page">
+  <h2 class="title">Episodios</h2>
+
+  <div class="search-filters">
+    <h3>Filtros de Búsqueda</h3>
+    <div class="filters">
+      <input
+        type="text"
+        placeholder="Nombre"
+        [(ngModel)]="filters.name"
+        name="name"
+        (input)="applyFilters()"
+      />
+      <input
+        type="text"
+        placeholder="Código (Ej: S01E01)"
+        [(ngModel)]="filters.episode"
+        name="episode"
+        (input)="applyFilters()"
+      />
+    </div>
+  </div>
+
+  <div *ngIf="episodes?.length; else noResults" class="episode-list">
+    <div class="episode-card" *ngFor="let episode of episodes">
+      <h3 title="{{ episode.name }}">{{ episode.name }}</h3>
+      <p><strong>Fecha emisión:</strong> {{ episode.air_date }}</p>
+      <p><strong>Código:</strong> {{ episode.episode }}</p>
+      <button class="btn-more-details" [routerLink]="[episode.id]">Ver detalles</button>
+    </div>
+  </div>
+
+  <ng-template #noResults>
+    <p>No se encontraron episodios</p>
+  </ng-template>
+
+  <div *ngIf="totalPages > 1" class="pagination">
+    <div class="paginator">
+      <button (click)="prevPage()" [disabled]="currentPage === 1">
+        Anterior
+      </button>
+      <span>Página {{ currentPage }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+        Siguiente
+      </button>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <p>Cargando episodios...</p>
+  </ng-template>
 </div>
-
-<h1>Episodios</h1>
-<ul *ngIf="episodes.length > 0; else loading">
-  <li *ngFor="let episode of episodes">
-    <strong>{{ episode.episode }}</strong> - {{ episode.name }} <a [routerLink]="[episode.id]">
-  Ver detalle
-</a>
-  </li>
-</ul>
-
-<div *ngIf="totalPages > 1" class="pagination">
-  <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
-    Anterior
-  </button>
-  <span>Página {{ currentPage }} de {{ totalPages }} </span>
-  <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
-    Siguiente
-  </button>
-</div>
-
-<ng-template #loading>
-  <p>Cargando episodios...</p>
-</ng-template>

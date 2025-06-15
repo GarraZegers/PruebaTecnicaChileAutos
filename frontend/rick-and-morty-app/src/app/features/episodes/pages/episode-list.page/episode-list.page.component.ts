@@ -39,9 +39,13 @@ export class EpisodeListPageComponent implements OnInit {
       });
   }
 
-  goToPage(page: number): void {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
+  prevPage(): void {
+    this.currentPage -= 1;
+    this.loadEpisodes();
+  }
+  
+  nextPage(): void {
+    this.currentPage += 1;
     this.loadEpisodes();
   }
 
