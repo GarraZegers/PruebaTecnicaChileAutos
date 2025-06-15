@@ -1,0 +1,47 @@
+<div class="location-page">
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Buscar por nombre"
+      [(ngModel)]="filters.name"
+      (input)="applyFilters()"
+    />
+    <input
+      type="text"
+      placeholder="Buscar por tipo"
+      [(ngModel)]="filters.type"
+      (input)="applyFilters()"
+    />
+    <select [(ngModel)]="filters.dimension" (ngModelChange)="applyFilters()">
+      <option value="">Todas las dimensiones</option>
+      <option value="Dimension C-137">Dimension C-137</option>
+      <option value="Post-Apocalyptic Dimension">Post-Apocalyptic</option>
+      <option value="Unknown">Unknown</option>
+    </select>
+    <button (click)="applyFilters()">Aplicar filtros</button>
+  </div>
+
+  <div class="location-list-container">
+    <div class="location-card" *ngFor="let location of locations">
+      <h4>{{ location.name }}</h4>
+      <p>Tipo: {{ location.type }}</p>
+      <p>Dimensión: {{ location.dimension }}</p>
+    </div>
+  </div>
+
+  <div class="pagination-controls">
+    <button (click)="firstPage()" [disabled]="currentPage === 1">
+      Primera
+    </button>
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      Anterior
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Siguiente
+    </button>
+    <button (click)="lastPage()" [disabled]="currentPage === totalPages">
+      Ultima
+    </button>
+  </div>
+</div>

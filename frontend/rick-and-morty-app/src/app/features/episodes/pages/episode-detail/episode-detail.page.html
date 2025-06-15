@@ -1,0 +1,39 @@
+<div class="container">
+  <button (click)="goBack()">Atrás</button>
+  <div class="details">
+    <h2>{{ episode?.name }}</h2>
+    <p><strong>Air Date:</strong> {{ episode?.air_date }}</p>
+    <p><strong>Episode Code:</strong> {{ episode?.episode }}</p>
+    <p><strong>Characters:</strong></p>
+    <ul>
+      <li *ngFor="let character of episode?.characters">
+    <button
+      [ngClass]="{ 'clicked': clickedCharacters.includes(character) }"
+      (click)="showCharacterImage(character)"
+    >
+      {{ character }}
+    </button>
+  </li>
+    </ul>
+  </div>
+
+  <div class="character-image-box">
+    <div *ngIf="characterObject else selectCharacter">
+      <img
+        [src]="characterObject.image"
+        alt="Character image"
+      />
+      <h3>{{ characterObject.name }}</h3>
+      <hr>
+      <p>STATUS: {{ characterObject.status }}</p>
+      <p>SPECIES: {{ characterObject.species }}</p>
+      <p>GENDER: {{ characterObject.gender }}</p>
+      <p>ORIGIN: {{ characterObject.origin.name }}</p>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #selectCharacter>
+<span >Selecciona un personaje</span>
+</ng-template>
