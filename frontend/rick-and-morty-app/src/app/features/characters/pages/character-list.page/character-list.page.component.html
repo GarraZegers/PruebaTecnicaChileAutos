@@ -1,1 +1,52 @@
-<p>character-list.page works!</p>
+<div class="character-page">
+  <div class="filters">
+    <select [(ngModel)]="filters.status" (ngModelChange)="applyFilters()">
+      <option value="">Todos los estados</option>
+      <option value="Alive">Vivo</option>
+      <option value="Dead">Muerto</option>
+      <option value="unknown">Desconocido</option>
+    </select>
+
+    <select [(ngModel)]="filters.gender" (ngModelChange)="applyFilters()">
+      <option value="">Todos los géneros</option>
+      <option value="Male">Masculino</option>
+      <option value="Female">Femenino</option>
+      <option value="Genderless">Sin género</option>
+      <option value="unknown">Desconocido</option>
+    </select>
+
+    <input
+      type="text"
+      placeholder="Buscar por nombre"
+      [(ngModel)]="filters.name"
+      (input)="applyFilters()"
+    />
+
+    <button (click)="applyFilters()">Aplicar filtros</button>
+  </div>
+
+  <div class="character-list-container">
+    <div class="character-card" *ngFor="let character of characters">
+      <img [src]="character.image" />
+      <h4>{{ character.name }}</h4>
+      <p>{{ character.species }}</p>
+      <p>{{ character.origin.name }}</p>
+    </div>
+  </div>
+
+  <div class="pagination-controls">
+    <button (click)="firstPage()" [disabled]="currentPage === 1">
+      Primera
+    </button>
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      Anterior
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Siguiente
+    </button>
+    <button (click)="lastPage()" [disabled]="currentPage === totalPages">
+      Ultima
+    </button>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EpisodeDto } from '../../../../core/services/models/episode.dto';
@@ -18,6 +18,8 @@ export class EpisodeDetailPage implements OnInit {
   private route = inject(ActivatedRoute);
   private episodeService = inject(EpisodeService);
   private characterService = inject(CharacterService);
+  private location = inject(Location);
+
 
   episode?: EpisodeDto;
   characterObject: CharacterDto | null = null;
@@ -51,5 +53,9 @@ export class EpisodeDetailPage implements OnInit {
         },
       });
     }
+  }
+
+  goBack() : void{
+    this.location.back();
   }
 }

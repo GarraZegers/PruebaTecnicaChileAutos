@@ -1,9 +1,9 @@
 export class CharacterFilter {
   name?: string;
-  status?: string;
+  status?: string = "";
   species?: string;
   type?: string;
-  gender?: string;
+  gender?: string = "";
 
   toQueryString(): string {
     const params: string[] = [];
@@ -16,4 +16,8 @@ export class CharacterFilter {
 
     return params.join('&');
   }
+
+  hasFilters() : boolean {
+        return !!this.name || !!this.status || !!this.species || !!this.type || !!this.gender;
+    }
 }

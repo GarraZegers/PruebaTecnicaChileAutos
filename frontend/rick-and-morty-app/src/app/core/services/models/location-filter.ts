@@ -1,7 +1,7 @@
 export class LocationFilter {
   name?: string;
   type?: string;
-  dimension?: string;
+  dimension?: string = "";
 
   toQueryString(): string {
     const params: string[] = [];
@@ -12,4 +12,8 @@ export class LocationFilter {
 
     return params.join('&');
   }
+
+   hasFilters() : boolean {
+        return !!this.name || !!this.type || !!this.dimension;
+    }
 }

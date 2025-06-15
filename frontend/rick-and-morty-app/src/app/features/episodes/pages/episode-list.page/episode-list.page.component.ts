@@ -20,7 +20,7 @@ export class EpisodeListPageComponent implements OnInit {
   currentPage = 1;
 
   private episodeService = inject(EpisodeService);
-
+  
   ngOnInit(): void {
     this.loadEpisodes();
   }
@@ -46,6 +46,16 @@ export class EpisodeListPageComponent implements OnInit {
   
   nextPage(): void {
     this.currentPage += 1;
+    this.loadEpisodes();
+  }
+
+  firstPage(): void {
+    this.currentPage = 1;
+    this.loadEpisodes();
+  }
+
+  lastPage(): void {
+    this.currentPage = this.totalPages;
     this.loadEpisodes();
   }
 

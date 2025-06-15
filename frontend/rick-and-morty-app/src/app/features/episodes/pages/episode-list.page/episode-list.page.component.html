@@ -36,12 +36,18 @@
 
   <div *ngIf="totalPages > 1" class="pagination">
     <div class="paginator">
+      <button (click)="firstPage()" [disabled]="currentPage === 1">
+        Primera
+      </button>
       <button (click)="prevPage()" [disabled]="currentPage === 1">
         Anterior
       </button>
-      <span>Página {{ currentPage }}</span>
+      <span>Página {{ currentPage }} de {{ totalPages }} </span>
       <button (click)="nextPage()" [disabled]="currentPage === totalPages">
         Siguiente
+      </button>
+      <button (click)="lastPage()" [disabled]="currentPage === totalPages">
+        Ultima
       </button>
     </div>
   </div>
